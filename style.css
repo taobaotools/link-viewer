@@ -126,6 +126,7 @@ textarea {
 #valid-hidden, #invalid-hidden {
     position: absolute;
     left: -999em;
+    top: -999em;
 }
 
 #valid-actions, #invalid-actions {
