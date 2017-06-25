@@ -7,6 +7,7 @@ const CONFIRM = 'WARNING! Are you sure you want to open these links? Since there
 function load() {
     // Read the query string
     var url = getParameterByName('url');
+    console.log('Parsed URL: ' + url);
     if (url === null) {
         setError('No URL specified.');
         return;
@@ -14,10 +15,12 @@ function load() {
 
     // Check and calculate the hash value to prevent users from requesting URLs themselves
     var hash = getParameterByName('hash');
+    console.log('Parsed hash: ' + hash);
     var id = url.split('/')[0];
     var calculatedHash = 0;
     for (var i = 0; i < id.length; i++)
         calculatedHash += parseInt(id.charAt(i), 16);
+    console.log('Calculated hash: ' + calculatedHash);
     if (parseInt(hash) !== calculatedHash) {
         setError('Incorrect hash value.');
         return;
@@ -25,6 +28,7 @@ function load() {
 
     // Add the gist forward URL
     url = 'https://gist.githubusercontent.com/anonymous/' + url;
+    console.log('Getting: ' + url);
 
     // Get the valid links and read into a JSON variable
     $.getJSON(url, function (data) {
