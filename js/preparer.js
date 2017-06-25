@@ -31,8 +31,18 @@ function load() {
     console.log('Getting: ' + url);
 
     // Get the valid links and read into a JSON variable
-    $.getJSON(url, function (data) {
-        display(data);
+    $.ajax({
+        dataType: 'json',
+        url: url,
+        data: '',
+        success: function (result) {
+            display(result);
+        },
+        error: function(jqXHR, exception) {
+            // Get error message and set it
+            var message = getErrorMessage(jqXHR, exception);
+            setError(message);
+        }
     })
 }
 
@@ -45,60 +55,42 @@ function display(validLinks) {
         return;
     }
 
-    // Build valid links and create event listener
-    setComponents(validLinks);
+    // Check the type of the parsed JSON and call setComponents accordingly
+    var isDict = Object.prototype.toString.call(validLinks) !== '[object Array]';
+    console.log('Parsed JSON is a ' + (isDict ? 'dictionary' : 'list'));
+    setComponents(validLinks, isDict);
+
+    // Add EventListener for opening links
     document.getElementById('valid-open').addEventListener('click', function () {
         if (validLinks.length <= 10 || validLinks.length > 10 && confirm(CONFIRM.replace('{}', validLinks.length))) {
-            validLinks.forEach(function (link) {
-                window.open(link);
-            });
+            if (isDict) {
+                Object.keys(validLinks).forEach(function (key) {
+                    window.open(validLinks[key]);
+                });
+            } else {
+                validLinks.forEach(function (link) {
+                    window.open(link);
+                });
+            }
         }
     });
 }
 
-
-/**
- * Get query string parameters, credit to https://stackoverflow.com/a/901144
- */
-function getParameterByName(name) {
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(window.location.href);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-/**
- * Change inner html of a DOM element
- */
-function setHTML(elementName, html) {
-    document.getElementById(elementName).innerHTML = html;
-}
-
-/**
- * Set display of html of a DOM element
- */
-function setDisplay(elementName, visible) {
-    document.getElementById(elementName).style.display = (visible ? 'unset' : 'none');
-}
-
-/**
- * Set error
- */
-function setError(message) {
-    setDisplay('loading-msg', false);
-    setHTML('message', 'Error! ' + message);
-}
-
 /* Prepare components to show valid and invalid links */
-function setComponents(array) {
+function setComponents(validLinks, isDict) {
     // Build HTML
     var html = '';
-    array.forEach(function (link) {
-        html += '<a href=\'' + link + '\' target=\'_blank\'>' + link + '</a><br>'
-    });
-    // Set components
+    if (isDict) {
+        Object.keys(validLinks).forEach(function (key) {
+            html += buildLink(key, validLinks[key]);
+        });
+    } else {
+        validLinks.forEach(function (link) {
+            html += buildLink(link, link);
+        });
+    }
+
+    // Set component visibility and inner HTML
     setDisplay('loading', false);
     setHTML('valid-content', html);
     setHTML('valid-hidden', html);
