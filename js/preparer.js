@@ -82,16 +82,19 @@ function setComponents(validLinks, isDict) {
     var html = '';
     var raw = '';
     var combined = '';
+    var length = 0;
 
     if (isDict) {
         Object.keys(validLinks).forEach(function (key) {
             html += buildLink(key, validLinks[key]);
             raw += buildLink(validLinks[key], validLinks[key]);
             combined += buildLink(key + ': ' + validLinks[key], validLinks[key]);
+            length++;
         });
     } else {
         validLinks.forEach(function (link) {
             html += buildLink(link, link);
+            length++;
         });
     }
 
@@ -100,6 +103,7 @@ function setComponents(validLinks, isDict) {
     setHTML('valid-content', html);
     setHTML('valid-hidden', html);
     setDisplay('valid', true);
+    setHTML('links-title', 'Links (' + length + ')');
 
     // Add event listeners for checkboxes
     if (isDict && html !== raw) {
