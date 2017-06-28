@@ -38,7 +38,7 @@ function load() {
         success: function (result) {
             display(result);
         },
-        error: function(jqXHR, exception) {
+        error: function (jqXHR, exception) {
             // Get error message and set it
             var message = getErrorMessage(jqXHR, exception);
             setError(message);
@@ -80,9 +80,14 @@ function display(validLinks) {
 function setComponents(validLinks, isDict) {
     // Build HTML
     var html = '';
+    var raw = '';
+    var combined = '';
+
     if (isDict) {
         Object.keys(validLinks).forEach(function (key) {
             html += buildLink(key, validLinks[key]);
+            raw += buildLink(validLinks[key], validLinks[key]);
+            combined += buildLink(key + ': ' + validLinks[key], validLinks[key]);
         });
     } else {
         validLinks.forEach(function (link) {
@@ -95,7 +100,59 @@ function setComponents(validLinks, isDict) {
     setHTML('valid-content', html);
     setHTML('valid-hidden', html);
     setDisplay('valid', true);
+
+    // Add event listeners for checkboxes
+    if (isDict && html !== raw) {
+        document.getElementById('raw').style.display = 'inline-block';
+        document.getElementById('toggle-raw').addEventListener('change', function () {
+            console.log('Handling raw toggle event');
+            if (this.checked) {
+                // Has been checked
+                document.getElementById('toggle-combined').checked = false;
+                setHTML('valid-content', raw);
+                setHTML('valid-hidden', raw);
+            } else {
+                // Has been unchecked
+                setHTML('valid-content', html);
+                setHTML('valid-hidden', html);
+            }
+        });
+    }
+
+    if (isDict && html !== combined) {
+        document.getElementById('combined').style.display = 'inline-block';
+        document.getElementById('toggle-combined').addEventListener('change', function () {
+            console.log('Handling combined toggle event');
+            if (this.checked) {
+                // Has been checked
+                document.getElementById('toggle-raw').checked = false;
+                setHTML('valid-content', combined);
+                setHTML('valid-hidden', combined);
+            } else {
+                // Has been unchecked
+                setHTML('valid-content', html);
+                setHTML('valid-hidden', html);
+            }
+        });
+    }
 }
 
 // Trigger when window is loaded
-window.onload = load();
+window.onload = function () {
+    load();
+    // Smooth Scrolling to the bottom of the page
+    $('#bottom-link').click(function () {
+        $('html, body').animate({
+            scrollTop: $($(this).attr('href')).offset().top
+        }, 600);
+
+        if ($('#bottom-link').attr('href') === '#bottom') {
+            $('#bottom-link').attr('href', '#top');
+            $('#bottom-link').text('↑');
+        } else {
+            $('#bottom-link').attr('href', '#bottom');
+            $('#bottom-link').text('↓');
+        }
+        return false;
+    });
+};

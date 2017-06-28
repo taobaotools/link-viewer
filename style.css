@@ -52,13 +52,17 @@ nav a:hover {
     border-color: #3949AB;
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
 }
 
 h3 {
     font-size: 22px;
-    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+h4 {
+    font-size: 18px;
     margin-bottom: 5px;
 }
 
@@ -112,11 +116,11 @@ textarea {
     line-height: 25px;
 }
 
-#valid, #invalid {
+#valid, #invalid, #toggle {
     display: none;
 }
 
-#valid-content a, #invalid-content a {
+#valid-content a, #valid-content-raw a, #invalid-content a {
     font-size: 17px;
     display: inline-block;
     margin-bottom: 10px;
@@ -124,7 +128,7 @@ textarea {
     word-wrap: break-word;
 }
 
-#valid-hidden, #invalid-hidden {
+#valid-hidden, #valid-hidden-raw, #invalid-hidden {
     position: absolute;
     left: -999em;
     top: -999em;
@@ -168,6 +172,43 @@ button:hover {
 
 #message {
     color: red;
+}
+
+#bottom-link {
+    position: fixed;
+    left: calc(100% - 100px);
+    top: calc(100% - 80px);
+    border-radius: 5px;
+    height: 45px;
+    width: 45px;
+    background-color: #3D5AFE;
+    color: white;
+    font-weight: 600;
+    line-height: 35px;
+    font-size: 30px;
+    text-align: center;
+}
+
+#bottom-link:hover {
+    text-decoration: none;
+    opacity: 0.95;
+    transition: 0.3s;
+}
+
+.row * {
+    display: inline-block;
+}
+
+#combined {
+    margin-left: 30px;
+}
+
+#raw, #combined, #toggle-raw, #toggle-combined {
+    display: none;
+}
+
+#raw h4, #combined h4 {
+    margin-top: 10px;
 }
 
 @media (max-width: 623px) {
@@ -216,11 +257,29 @@ button:hover {
     .mobile-hide {
         display: none;
     }
-}
 
-@media (max-width: 426px) {
     #fidget-spinner {
         width: 100% !important;
         height: 100% !important;
+    }
+
+    #bottom-link {
+        left: calc(100% - 60px);
+        top: calc(100% - 60px);
+        height: 40px;
+        width: 40px;
+        line-height: 30px;
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 474px) {
+    #raw {
+        margin-right: 10px;
+    }
+
+    #combined {
+        margin-top: 10px;
+        margin-left: 0;
     }
 }

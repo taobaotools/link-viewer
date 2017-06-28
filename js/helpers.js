@@ -48,6 +48,13 @@ function setDisplay(elementName, visible) {
 }
 
 /**
+ * Set checked status of a checkbox
+ */
+function setChecked(elementName, checked) {
+    document.getElementById(elementName).checked = checked;
+}
+
+/**
  * Set error
  */
 function setError(message) {
