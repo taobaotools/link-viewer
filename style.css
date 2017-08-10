@@ -199,8 +199,8 @@ button:hover {
     display: inline-block;
 }
 
-#combined {
-    margin-left: 30px;
+#raw {
+    margin-right: 30px;
 }
 
 #raw, #combined, #toggle-raw, #toggle-combined {
@@ -280,6 +280,5 @@ button:hover {
 
     #combined {
         margin-top: 10px;
-        margin-left: 0;
     }
 }
