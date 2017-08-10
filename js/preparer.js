@@ -62,7 +62,7 @@ function display(validLinks) {
 
     // Add EventListener for opening links
     document.getElementById('valid-open').addEventListener('click', function () {
-        if (validLinks.length <= 10 || validLinks.length > 10 && confirm(CONFIRM.replace('{}', validLinks.length))) {
+        if (validLinks.length <= 10 || (validLinks.length > 10 && confirm(CONFIRM.replace('{}', validLinks.length)))) {
             if (isDict) {
                 Object.keys(validLinks).forEach(function (key) {
                     window.open(validLinks[key]);
