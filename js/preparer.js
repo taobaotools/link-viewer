@@ -1,5 +1,5 @@
 const CONFIRM = 'WARNING! Are you sure you want to open these links? Since there are {} links, you ' +
-    'may temporarily experience some lag in your web browser';
+    'may experience some lag in your web browser';
 
 /**
  * Do everything
@@ -58,22 +58,27 @@ function display(validLinks) {
     // Check the type of the parsed JSON and call setComponents accordingly
     var isDict = Object.prototype.toString.call(validLinks) !== '[object Array]';
     console.log('Parsed JSON is a ' + (isDict ? 'dictionary' : 'list'));
-    setComponents(validLinks, isDict);
 
     // Add EventListener for opening links
     document.getElementById('valid-open').addEventListener('click', function () {
-        if (validLinks.length <= 10 || (validLinks.length > 10 && confirm(CONFIRM.replace('{}', validLinks.length)))) {
-            if (isDict) {
-                Object.keys(validLinks).forEach(function (key) {
-                    window.open(validLinks[key]);
-                });
-            } else {
-                validLinks.forEach(function (link) {
-                    window.open(link);
-                });
-            }
+        var linkCount = isDict ? Object.keys(validLinks).length : validLinks.length;
+        if (linkCount >= 10 && !confirm(CONFIRM.replace('{}', linkCount))) {
+            return;
+        }
+
+        if (isDict) {
+            Object.keys(validLinks).forEach(function (key) {
+                window.open(validLinks[key]);
+            });
+        } else {
+            validLinks.forEach(function (link) {
+                window.open(link);
+            });
         }
     });
+
+    // Set the components
+    setComponents(validLinks, isDict);
 }
 
 /* Prepare components to show valid and invalid links */
